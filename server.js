@@ -10,6 +10,7 @@ app.post("/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
 
+    // Chamada para OpenAI
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -24,10 +25,11 @@ app.post("/chat", async (req, res) => {
             content: `
 Você é a IA PRISMA.
 Você entende português natural.
-Você responde com clareza, organização e lógica.
-Você NÃO responde errado.
-Você ajuda o usuário a pensar melhor.
-            `
+Responda de forma clara, organizada e lógica.
+Sempre responda corretamente.
+Ajude o usuário a pensar melhor.
+Seja objetiva, amigável e útil.
+          `
           },
           { role: "user", content: userMessage }
         ]
@@ -35,13 +37,16 @@ Você ajuda o usuário a pensar melhor.
     });
 
     const data = await response.json();
+
+    // Envia de volta para o frontend
     res.json({ reply: data.choices[0].message.content });
 
   } catch (err) {
-    res.json({ reply: "Erro ao processar a mensagem." });
+    console.error(err);
+    res.json({ reply: "Erro ao processar a mensagem. Tente novamente." });
   }
 });
 
 app.listen(3000, () => {
-  console.log("🧠 PRISMA API rodando");
+  console.log("🧠 PRISMA API rodando com IA real");
 });
